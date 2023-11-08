@@ -1,0 +1,102 @@
+import axios from "axios";
+import { wrapper } from "axios-cookiejar-support";
+import { CookieJar } from "tough-cookie";
+import * as cheerio from "cheerio";
+import { AuthenticationException } from "./exceptions/authentication-exception";
+import { InvalidUrlException } from "./exceptions/invalid-url-exception";
+import { urls } from "./urls";
+import { TestNotFoundException } from "./exceptions/test-not-found-exception";
+
+export class TestsCrawler {
+  client = wrapper(
+    axios.create({
+      baseURL: urls.base,
+      withCredentials: true,
+      jar: new CookieJar(),
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+    })
+  );
+
+  async completeTest(username: string, password: string, testUrl: string) {
+    await this.login(username, password);
+
+    let html = await this.startTest(testUrl);
+
+    const wrongQuestionsIndexes = [];
+
+    for (let i = 0; i <= Math.floor(Math.random() * 6); i++) {
+      wrongQuestionsIndexes.push(Math.floor(Math.random() * 40));
+    }
+
+    for (let i = 0; i < 40; i++) {
+      html = await this.answerQuestion(
+        html,
+        i,
+        !wrongQuestionsIndexes.includes(i),
+        i < 39
+      );
+    }
+
+    const $ = cheerio.load(html);
+    const resultQuery = $('a[id="przycisk_udostepnij_wynik"]').attr("params");
+
+    return `${urls.base}/${urls.viewAnswers}?${resultQuery}`;
+  }
+
+  private async login(username: string, password: string) {
+    const res = await this.client.post(urls.login, { username, password });
+
+    if (!res.data.includes(username)) {
+      throw new AuthenticationException();
+    }
+  }
+
+  private async startTest(testUrl: string) {
+    const testId = TestsCrawler.getTestId(testUrl);
+
+    const res = await this.client.post(urls.test, {
+      ilosc_pytan: 40,
+      "test_id_1[]": testId,
+      potwierdz_test: "",
+    });
+
+    if (res.data.includes("Ten test jest obecnie niedostępny.")) {
+      throw new TestNotFoundException();
+    }
+
+    return res.data;
+  }
+
+  private async answerQuestion(
+    html: string,
+    index: number,
+    correct: boolean,
+    next: boolean
+  ) {
+    const $ = cheerio.load(html);
+
+    const questionId = parseInt($('input[name="question_id"]').val() as string);
+
+    const correctAnswer = $(`tr[class*="${questionId * 6789}"] input`).val();
+    const invalidAnswer = $(`tr[class*="${questionId * 5424}"] input`).val();
+
+    const res = await this.client.post(urls.question, {
+      [`questions[${questionId}]`]: correct ? correctAnswer : invalidAnswer,
+      question_id: questionId,
+      question_number: index,
+      [next ? "next" : "submit"]: "",
+    });
+
+    return res.data;
+  }
+
+  private static getTestId(testUrl: string) {
+    const match = testUrl.match(/test-(\d+)-/);
+
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      throw new InvalidUrlException();
+    }
+  }
+}
