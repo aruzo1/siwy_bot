@@ -54,11 +54,15 @@ export class TestsCrawler {
   private async startTest(testUrl: string) {
     const testId = TestsCrawler.getTestId(testUrl);
 
-    const res = await this.client.post(urls.test, {
-      ilosc_pytan: 40,
-      "test_id_1[]": testId,
-      potwierdz_test: "",
-    });
+    const res = await this.client.post(
+      urls.test,
+      {
+        ilosc_pytan: 40,
+        "test_id_1[]": testId,
+        potwierdz_test: "",
+      },
+      { params: { uri: testUrl } }
+    );
 
     if (res.data.includes("Ten test jest obecnie niedostępny.")) {
       throw new TestNotFoundException();
@@ -76,12 +80,31 @@ export class TestsCrawler {
     const $ = cheerio.load(html);
 
     const questionId = parseInt($('input[name="question_id"]').val() as string);
+    const allAnswers = $('tr[class*="info"]').toArray();
 
-    const correctAnswer = $(`tr[class*="${questionId * 6789}"] input`).val();
-    const invalidAnswer = $(`tr[class*="${questionId * 5424}"] input`).val();
+    const correctAnswer = $(
+      allAnswers.find((e) =>
+        $(e)
+          .attr("class")!
+          .includes(`${questionId * 6789}`)
+      )
+    )
+      .find("input")
+      .val();
+
+    const incorrectAnswer = $(
+      allAnswers.find(
+        (e) =>
+          !$(e)
+            .attr("class")!
+            .includes(`${questionId * 6789}`)
+      )
+    )
+      .find("input")
+      .val();
 
     const res = await this.client.post(urls.question, {
-      [`questions[${questionId}]`]: correct ? correctAnswer : invalidAnswer,
+      [`questions[${questionId}]`]: correct ? correctAnswer : incorrectAnswer,
       question_id: questionId,
       question_number: index,
       [next ? "next" : "submit"]: "",
