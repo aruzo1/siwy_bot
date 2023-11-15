@@ -24,7 +24,7 @@ const HomePage = () => {
   }, []);
 
   const handleCorrectAnswers = useCallback((e: FormEvent<HTMLInputElement>) => {
-    setCorrectAnswers(parseInt(e.currentTarget.value));
+    setCorrectAnswers(e.currentTarget.value);
   }, []);
   
   const handleSubmit = useCallback(
@@ -35,7 +35,7 @@ const HomePage = () => {
       setIsLoading(true);
 
       axios
-        .post("/api/complete-test", { username, password, url, correctAnswers })
+        .post("/api/complete-test", { username, password, url, correctAnswers: parseInt(correctAnswers) })
         .then((res) => setResultUrl(res.data))
         .catch((err) => setError(err.response.data))
         .finally(() => setIsLoading(false));
