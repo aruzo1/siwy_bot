@@ -5,7 +5,7 @@ const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [url, setUrl] = useState("");
-  const [correctAnswers, setCorrectAnswers] = useState(40);
+  const [correctAnswers, setCorrectAnswers] = useState("0");
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
