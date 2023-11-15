@@ -24,7 +24,7 @@ const HomePage = () => {
   }, []);
 
   const handleCorrectAnswers = useCallback((e: FormEvent<HTMLInputElement>) => {
-    setCorrectAnswers(e.currentTarget.value);
+    setCorrectAnswers(parseInt(e.currentTarget.value));
   }, []);
   
   const handleSubmit = useCallback(
