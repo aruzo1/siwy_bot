@@ -17,7 +17,7 @@ export class TestsCrawler {
     })
   );
 
-  async completeTest(username: string, password: string, testUrl: string, correctAnswers: string) {
+  async completeTest(username: string, password: string, testUrl: string, correctAnswers: number) {
     await this.login(username, password);
 
     let html = await this.startTest(testUrl);
