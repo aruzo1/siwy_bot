@@ -42,7 +42,7 @@ const HomePage = () => {
 
       setUrl("");
     },
-    [username, password, url]
+    [username, password, url, correctAnswers]
   );
 
   return (
