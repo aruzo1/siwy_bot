@@ -24,7 +24,7 @@ export class TestsCrawler {
 
     const wrongQuestionsIndexes = [];
 
-    for (let i = 0; i <= Math.floor(correctAnswers); i++) {
+    for (let i = 0; i <= correctAnswers; i++) {
       wrongQuestionsIndexes.push(Math.floor(Math.random() * 40));
     }
 
