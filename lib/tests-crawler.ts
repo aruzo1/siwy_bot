@@ -17,14 +17,14 @@ export class TestsCrawler {
     })
   );
 
-  async completeTest(username: string, password: string, testUrl: string) {
+  async completeTest(username: string, password: string, testUrl: string, correctAnswers: string) {
     await this.login(username, password);
 
     let html = await this.startTest(testUrl);
 
     const wrongQuestionsIndexes = [];
 
-    for (let i = 0; i <= Math.floor(Math.random() * 13); i++) {
+    for (let i = 0; i <= Math.floor(correctAnswers); i++) {
       wrongQuestionsIndexes.push(Math.floor(Math.random() * 40));
     }
 

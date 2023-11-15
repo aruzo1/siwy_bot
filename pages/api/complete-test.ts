@@ -6,7 +6,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     req.method !== "POST" ||
     !req.body.username ||
     !req.body.password ||
-    !req.body.url
+    !req.body.url ||
+    !req.body.correctAnswers
   ) {
     return res.status(400).end();
   }
@@ -17,7 +18,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const resultUrl = await crawler.completeTest(
       req.body.username,
       req.body.password,
-      req.body.url
+      req.body.url,
+      req.body.correctAnswers
     );
 
     res.status(200).json(resultUrl);

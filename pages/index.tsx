@@ -5,6 +5,7 @@ const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [url, setUrl] = useState("");
+  const [correctAnswers, setCorrectAnswers] = useState(40);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<null | string>(null);
@@ -22,6 +23,10 @@ const HomePage = () => {
     setUrl(e.currentTarget.value);
   }, []);
 
+  const handleCorrectAnswers = useCallback((e: FormEvent<HTMLInputElement>) => {
+    setCorrectAnswers(e.currentTarget.value);
+  }, []);
+  
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
@@ -91,6 +96,20 @@ const HomePage = () => {
         required
       />
 
+      <label className="label mt-4" htmlFor="url">
+        Ilość złych odpowiedzi
+      </label>
+      <input
+        className="input mt-2"
+        id="correctAnswers"
+        name="correctAnswers"
+        type="number"
+        placeholder="Ilość"
+        value={correctAnswers}
+        onChange={handleCorrectAnswers}
+        required
+      />
+      
       <button className="btn mt-8" type="submit">
         {isLoading ? "W trakcie hakowania..." : "Hakuj"}
       </button>
