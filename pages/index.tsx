@@ -35,7 +35,7 @@ const HomePage = () => {
       setIsLoading(true);
 
       axios
-        .post("/api/complete-test", { username, password, url })
+        .post("/api/complete-test", { username, password, url, correctAnswers })
         .then((res) => setResultUrl(res.data))
         .catch((err) => setError(err.response.data))
         .finally(() => setIsLoading(false));
