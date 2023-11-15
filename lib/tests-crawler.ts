@@ -24,7 +24,7 @@ export class TestsCrawler {
 
     const wrongQuestionsIndexes = [];
 
-    for (let i = 0; i <= Math.floor(Math.random() * 6); i++) {
+    for (let i = 0; i <= Math.floor(Math.random() * 13); i++) {
       wrongQuestionsIndexes.push(Math.floor(Math.random() * 40));
     }
 
