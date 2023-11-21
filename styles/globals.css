@@ -10,6 +10,6 @@
 
 @layer components {
   .btn {
-    @apply rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700;
+    @apply rounded bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700;
   }
 }

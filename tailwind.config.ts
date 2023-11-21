@@ -6,6 +6,7 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    borderRadius: { DEFAULT: "0.5rem" },
     fontFamily: {
       sans: ["DM Sans", "sans-serif"],
     },

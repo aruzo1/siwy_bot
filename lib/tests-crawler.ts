@@ -29,7 +29,7 @@ export class TestsCrawler {
 
     const wrongQuestionsIndexes: number[] = [];
 
-    while (wrongQuestionsIndexes.length < correctAnswers) {
+    while (wrongQuestionsIndexes.length < 40 - correctAnswers) {
       const randomIndex = Math.floor(Math.random() * 40);
 
       if (!wrongQuestionsIndexes.includes(randomIndex)) {

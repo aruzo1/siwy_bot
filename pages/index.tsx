@@ -1,4 +1,5 @@
 import { FormEvent, useCallback, useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 import { FieldSet, Input, Label } from "@/components";
 
@@ -6,7 +7,7 @@ const HomePage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [url, setUrl] = useState("");
-  const [correctAnswers, setCorrectAnswers] = useState("0");
+  const [correctAnswers, setCorrectAnswers] = useState("40");
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,12 +87,11 @@ const HomePage = () => {
           </FieldSet>
 
           <FieldSet>
-            <Label htmlFor="correctAnswers">Ilość złych odpowiedzi</Label>
+            <Label htmlFor="correctAnswers">Ilość dobrych odpowiedzi</Label>
             <Input
               id="correctAnswers"
               name="correctAnswers"
               type="number"
-              placeholder="Ilość"
               value={correctAnswers}
               onChange={(e) => setCorrectAnswers(e.target.value)}
               required
@@ -104,13 +104,13 @@ const HomePage = () => {
         </button>
 
         {resultUrl && (
-          <a
-            className="mt-8 block max-w-full break-all text-blue-500"
+          <Link
+            className="mt-8 block max-w-full break-all rounded border border-green-700 bg-green-900 p-4 text-green-300"
             href={resultUrl}
             target="_blank"
           >
             {resultUrl}
-          </a>
+          </Link>
         )}
       </form>
     </div>
