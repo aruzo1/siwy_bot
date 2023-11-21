@@ -1,5 +1,5 @@
+import { NextApiRequest, NextApiResponse } from "next";
 import { TestsCrawler } from "@/lib/tests-crawler";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   if (
@@ -19,7 +19,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       req.body.username,
       req.body.password,
       req.body.url,
-      req.body.correctAnswers
+      req.body.correctAnswers,
     );
 
     res.status(200).json(resultUrl);

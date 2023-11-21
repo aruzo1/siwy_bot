@@ -14,18 +14,27 @@ export class TestsCrawler {
       withCredentials: true,
       jar: new CookieJar(),
       headers: { "content-type": "application/x-www-form-urlencoded" },
-    })
+    }),
   );
 
-  async completeTest(username: string, password: string, testUrl: string, correctAnswers: number) {
+  async completeTest(
+    username: string,
+    password: string,
+    testUrl: string,
+    correctAnswers: number,
+  ) {
     await this.login(username, password);
 
     let html = await this.startTest(testUrl);
 
-    const wrongQuestionsIndexes = [];
+    const wrongQuestionsIndexes: number[] = [];
 
-    for (let i = 0; i <= correctAnswers; i++) {
-      wrongQuestionsIndexes.push(Math.floor(Math.random() * 40));
+    while (wrongQuestionsIndexes.length < correctAnswers) {
+      const randomIndex = Math.floor(Math.random() * 40);
+
+      if (!wrongQuestionsIndexes.includes(randomIndex)) {
+        wrongQuestionsIndexes.push(randomIndex);
+      }
     }
 
     for (let i = 0; i < 40; i++) {
@@ -33,7 +42,7 @@ export class TestsCrawler {
         html,
         i,
         !wrongQuestionsIndexes.includes(i),
-        i < 39
+        i < 39,
       );
     }
 
@@ -61,7 +70,7 @@ export class TestsCrawler {
         "test_id_1[]": testId,
         potwierdz_test: "",
       },
-      { params: { uri: testUrl } }
+      { params: { uri: testUrl } },
     );
 
     if (res.data.includes("Ten test jest obecnie niedostępny.")) {
@@ -75,7 +84,7 @@ export class TestsCrawler {
     html: string,
     index: number,
     correct: boolean,
-    next: boolean
+    next: boolean,
   ) {
     const $ = cheerio.load(html);
 
@@ -86,8 +95,8 @@ export class TestsCrawler {
       allAnswers.find((e) =>
         $(e)
           .attr("class")!
-          .includes(`${questionId * 6789}`)
-      )
+          .includes(`${questionId * 6789}`),
+      ),
     )
       .find("input")
       .val();
@@ -97,8 +106,8 @@ export class TestsCrawler {
         (e) =>
           !$(e)
             .attr("class")!
-            .includes(`${questionId * 6789}`)
-      )
+            .includes(`${questionId * 6789}`),
+      ),
     )
       .find("input")
       .val();

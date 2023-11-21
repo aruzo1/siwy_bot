@@ -2,20 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    @apply bg-neutral-950 text-white;
+  }
+}
+
 @layer components {
-  .link {
-    @apply text-blue-500;
-  }
-
-  .label {
-    @apply text-lg;
-  }
-
-  .input {
-    @apply px-4 py-2 rounded-lg outline-none border border-neutral-300 focus:border-indigo-500 transition-colors;
-  }
-
   .btn {
-    @apply px-4 py-2 rounded-lg font-bold bg-indigo-500 hover:bg-indigo-600 text-white transition-colors;
+    @apply rounded-lg bg-indigo-600 px-6 py-3 font-bold text-white transition-colors hover:bg-indigo-700;
   }
 }
