@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { FieldSet, Input, Label } from "@/components";
@@ -12,6 +12,11 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [resultUrl, setResultUrl] = useState<string | null>(null);
+
+  const percentageScore = useMemo(
+    () => (parseInt(correctAnswers) / 40) * 100,
+    [correctAnswers],
+  );
 
   const handleSubmit = useCallback(
     (e: FormEvent) => {
@@ -93,11 +98,18 @@ const HomePage = () => {
               name="correctAnswers"
               type="number"
               value={correctAnswers}
+              min={0}
+              max={40}
               onChange={(e) => setCorrectAnswers(e.target.value)}
               required
             />
           </FieldSet>
         </div>
+
+        <span className="mt-8 block text-xl">
+          Wynik w procentach:{" "}
+          <span className="font-bold">{percentageScore}%</span>
+        </span>
 
         <button className="btn mt-8 w-full sm:w-auto" type="submit">
           {isLoading ? "W trakcie hakowania..." : "Hakuj"}
