@@ -2,15 +2,16 @@ import axios from "axios";
 import { wrapper } from "axios-cookiejar-support";
 import { CookieJar } from "tough-cookie";
 import * as cheerio from "cheerio";
-import { AuthenticationException } from "./exceptions/authentication-exception";
-import { InvalidUrlException } from "./exceptions/invalid-url-exception";
-import { urls } from "./urls";
-import { TestNotFoundException } from "./exceptions/test-not-found-exception";
+import {
+  AuthenticationException,
+  InvalidUrlException,
+  TestNotFoundException,
+} from "@/lib/errors";
+import { URLS } from "@/lib/constants";
 
 export class TestsCrawler {
   client = wrapper(
     axios.create({
-      baseURL: urls.base,
       withCredentials: true,
       jar: new CookieJar(),
       headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -49,11 +50,11 @@ export class TestsCrawler {
     const $ = cheerio.load(html);
     const resultQuery = $('a[id="przycisk_udostepnij_wynik"]').attr("params");
 
-    return `${urls.base}/${urls.viewAnswers}?${resultQuery}`;
+    return `${URLS.viewAnswers}?${resultQuery}`;
   }
 
   private async login(username: string, password: string) {
-    const res = await this.client.post(urls.login, { username, password });
+    const res = await this.client.post(URLS.login, { username, password });
 
     if (!res.data.includes(username)) {
       throw new AuthenticationException();
@@ -64,7 +65,7 @@ export class TestsCrawler {
     const testId = TestsCrawler.getTestId(testUrl);
 
     const res = await this.client.post(
-      urls.test,
+      URLS.test,
       {
         ilosc_pytan: 40,
         "test_id_1[]": testId,
@@ -112,7 +113,7 @@ export class TestsCrawler {
       .find("input")
       .val();
 
-    const res = await this.client.post(urls.question, {
+    const res = await this.client.post(URLS.question, {
       [`questions[${questionId}]`]: correct ? correctAnswer : incorrectAnswer,
       question_id: questionId,
       question_number: index,
