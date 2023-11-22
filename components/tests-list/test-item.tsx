@@ -7,7 +7,7 @@ export const TestItem = ({ name, url }: { name: string; url: string }) => {
     <li>
       {name} -{" "}
       <span
-        className="cursor-pointer text-blue-500 transition-colors hover:text-blue-600 active:text-blue-700"
+        className="cursor-pointer select-none text-blue-500 transition-colors hover:text-blue-600 active:text-blue-700"
         onClick={copyToClipboard}
       >
         Skopiuj url
